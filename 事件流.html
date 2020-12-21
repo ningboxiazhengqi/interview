@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="a" style="width: 100%; height: 300px;background-color: antiquewhite;">
+        a
+        <div id="b" style="width: 100%; height: 200px;background-color: burlywood;">
+            b
+            <div id="c" style="width: 100%; height: 100px;background-color: cornflowerblue;">
+                c
+            </div>
+        </div>
+    </div>
+    <ul id="item-list">
+        <li>item1</li>
+        <li>item2</li>
+        <li>item3</li>
+        <li>item4</li>
+    </ul>
+    <div id="father-id" style="background:red;width:100%;height:300px">   
+        <ul >
+            <li id="father-id-li">item1</li>
+            <li id="father-id-li">item2</li>
+            <li id="father-id-li">item3</li>
+            <li id="father-id-li">item4</li>
+        </ul>
+
+    </div>
+    <div class="outer">
+        outer
+        <div class="inner">inner</div>
+      </div>
+    <script>
+        // DOM事件流的三个阶段是先捕获阶段，然后是目标阶段，最后才是冒泡阶段。
+        // 我们时常面试所说的先捕获后冒泡也由此而来。事件代理就是利用事件冒泡或事件捕获的
+        // 机制把一系列的内层元素事件绑定到外层元素
+
+
+        //从执行结果可以看到，a,b两个元素的事件响应都是先捕获后冒泡的，但对于触发事件的目标元素c，
+        //事件的响应并没有遵循先捕获后冒泡的规则，这是为什么？
+        //因为目标元素是事件触发主体处于事件流中的目标阶段，处理事件的顺序是根据注册顺序来执行的。
+        var a = document.getElementById('a')
+        var b = document.getElementById('b')
+        var c = document.getElementById('c')
+        a.addEventListener('click', () => {
+            console.log("冒泡a")
+        })
+        b.addEventListener('click', () => {
+            console.log('冒泡b')
+        })
+        c.addEventListener('click', () => {
+            console.log("冒泡c")
+        })
+        a.addEventListener('click', () => {
+            console.log("捕获a")
+        }, true)
+        b.addEventListener('click', () => {
+            console.log('捕获b')
+        }, true)
+        c.addEventListener('click', () => {
+            console.log("捕获c")
+        }, true)
+        // c.addEventListener('click', () => {console.log("冒泡c")})
+
+        var items = document.getElementById('item-list');
+        //事件捕获实现事件代理
+        items.addEventListener('click', (e) => {
+            //阻止冒泡
+            e.stopPropagation()
+            console.log('捕获：click ', e.target.innerHTML)
+        }, true);
+        //事件冒泡实现事件代理
+        items.addEventListener('click', (e) => {
+          
+            console.log('冒泡：click ', e.target.innerHTML)
+        }, false);
+
+
+        document.getElementById("father-id").onclick=function(event){
+            event=event||window.event
+            let target=event.target||event.srcElement
+            //可以自己打印一下event.target.nodeName,看看是什么
+            console.log(target.nodeName.toLowerCase())
+            // if (target.nodeName.toLowerCase()==='xxx'){
+            //     //事件内容
+            // }
+        }
+
+        var outer = document.querySelector('.outer');
+var inner = document.querySelector('.inner');
+
+
+function onClick(e) {
+    //e.stopPropagation()
+  console.log('冒泡click');
+
+  setTimeout(function() {
+    console.log('冒泡timeout');
+  }, 0);
+
+  Promise.resolve().then(function() {
+    console.log('冒泡promise');
+  });
+
+}
+function onClick1(e) {
+    //e.stopPropagation() 
+  console.log('捕获click');
+
+  setTimeout(function() {
+    console.log('捕获timeout');
+  }, 0);
+
+  Promise.resolve().then(function() {
+    console.log('捕获promise');
+  });
+
+}
+function onClick2(e) {
+    //e.stopPropagation() 
+  console.log('目标click');
+
+  setTimeout(function() {
+    console.log('目标timeout');
+  }, 0);
+
+  Promise.resolve().then(function() {
+    console.log('目标promise');
+  });
+
+}
+inner.addEventListener('click', onClick2,true);
+inner.addEventListener('click', onClick);
+outer.addEventListener('click', onClick1,true);
+
+//深入理解事件委托（事件代理）以及取消冒泡和默认事件
+//https://juejin.cn/post/6850418111242305544
+//https://juejin.cn/post/6844904190280466440
+
+//时间循环机制
+//https://juejin.cn/post/6844904066141650951
+
+    </script>
+
+
+</body>
+
+</html>

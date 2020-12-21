@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+        //数组 对象  扁平化
+        function flating(arr) {
+            let result = []
+            arr.map((v, k) => {
+                if (Array.isArray(v)) {
+                    result = result.concat(flating(v))
+                } else {
+                    result.push(v)
+                }
+            })
+            return result
+
+        }
+        //console.log(flating([1, 2, 3, [4, 5]]))
+        //去重
+        function unique(arr) {
+            //创建数组
+            let result = new Set()
+            return arr.filter(v => {
+                if (result.has(v)) {
+                    return false
+                } else {
+                    result.add(v)
+                    return true
+                }
+            })
+        }
+        console.log(unique([1, 1, 2, 56]))
+    </script>
+</body>
+
+</html>
