@@ -1,0 +1,3 @@
+<view class='x-click' data-type="1" bindtap="bindViewTap">测试</view>
+
+<input type="text" value="{{value}}" placeholder="请输入" bindinput="bindinput" />
